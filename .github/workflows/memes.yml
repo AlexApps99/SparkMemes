@@ -1,0 +1,19 @@
+name: C++ CI
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  meme:
+    name: Meme
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Create memes
+      run: |
+        choco install ffmpeg
+        python3 -m pip install --upgrade pip
+        python3 -m pip install -r requirements.txt
+        python3 sparkmemes.py "Epicly dank memes v{}"
