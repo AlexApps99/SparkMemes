@@ -1,12 +1,12 @@
-name: C++ CI
+name: Memes
 
 on:
   schedule:
     - cron: "0 8 * * *"
 
 jobs:
-  meme:
-    name: Meme
+  memes:
+    name: Memes
     runs-on: windows-latest
     steps:
     - name: Checkout repository
