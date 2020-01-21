@@ -369,7 +369,7 @@ def like_video(youtube, video_id):
     print("Video liked successfully")
 
 
-def upload_captions(youtube, video_id):
+def upload_captions(youtube, video_id, name):
   try:
     youtube.captions().insert(
       part="snippet",
@@ -380,7 +380,7 @@ def upload_captions(youtube, video_id):
           "name": "Credits"
         }
       },
-      media_body = MediaFileUpload(f"authors.srt", chunksize=-1, resumable=True)
+      media_body = MediaFileUpload(f"{name}.srt", chunksize=-1, resumable=True)
     ).execute(num_retries=5)
   except HttpError as e:
     print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
@@ -415,8 +415,9 @@ if __name__ == "__main__":
   yt = authenticate()
   video_id = upload(yt, args.name.replace('{}',str((date.today()-date(2020,1,16)).days)))
   upload_thumbnail(yt, gen_thumbnail(imgs[0]), video_id)
+  upload_captions(yt, video_id, "authors")
+  #upload_captions(yt, video_id, "titles")
   like_video(yt, video_id)
-  #upload_captions(yt, video_id)
   
   print(
     "Video: https://youtube.com/watch?v={0}\n"
