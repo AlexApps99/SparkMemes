@@ -155,7 +155,7 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
 
   try:
     mainstream = (
-      ffmpeg.input("pipe:0", format="ppm_pipe", framerate=f"1/{ImageDelay}")
+      ffmpeg.input("pipe:0", format="ppm_pipe", framerate=f"1/{ImageDelay}", thread_queue_size="256")
       .filter("scale", **resolution, force_original_aspect_ratio="decrease")
       .filter("pad", **resolution, x="-1", y="-1", color=Background.lower())
     )
@@ -175,7 +175,6 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
         "main.nut",
         shortest=None,
         max_muxing_queue_size="1024",
-        thread_queue_size="256",
         **quiet,
         **{"c:v": "rawvideo", "c:a": "pcm_s16le", "f": "nut", "pix_fmt": "yuv420p"}
       )
