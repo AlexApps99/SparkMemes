@@ -234,7 +234,7 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
     
     task = (
       mainstream
-      .output("video.mp4", **quiet, **output_config)
+      .output("video.mp4", **quiet, **output_config, thread_queue_size="100")
       .overwrite_output()
     )
 
