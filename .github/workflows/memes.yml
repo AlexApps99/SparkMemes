@@ -13,7 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
     - name: Install FFmpeg
-      run: sudo apt-get install ffmpeg
+      run: sudo apt-get update && sudo apt-get install ffmpeg
     - name: Install requirements.txt
       run: python3 -m pip install -r requirements.txt
     - name: Create memes
