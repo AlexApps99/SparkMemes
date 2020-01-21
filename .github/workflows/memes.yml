@@ -8,10 +8,14 @@ on:
 jobs:
   memes:
     name: Memes
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+    - name: Install FFmpeg
+      run: sudo apt-get install ffmpeg
+    - name: Install requirements.txt
+      run: python3 -m pip install -r requirements.txt
     - name: Create memes
       env:
         praw_client_id: ${{ secrets.REDDIT_CLIENT_ID }}
@@ -20,7 +24,4 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: |
-        choco install ffmpeg --no-progress
-        python -m pip install -r requirements.txt
-        python sparkmemes.py "Epicly dank memes v{}"
+      run: python3 sparkmemes.py "Epicly dank memes v{}"
