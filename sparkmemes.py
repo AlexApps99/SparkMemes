@@ -175,6 +175,7 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
         "main.nut",
         shortest=None,
         max_muxing_queue_size="1024",
+        thread_queue_size="256",
         **quiet,
         **{"c:v": "rawvideo", "c:a": "pcm_s16le", "f": "nut", "pix_fmt": "yuv420p"}
       )
@@ -234,7 +235,7 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
     
     task = (
       mainstream
-      .output("video.mp4", **quiet, **output_config, thread_queue_size="100")
+      .output("video.mp4", **quiet, **output_config)
       .overwrite_output()
     )
 
