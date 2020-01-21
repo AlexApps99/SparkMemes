@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import argparse
-from sys import argv
 from datetime import date, datetime
 
 import requests
@@ -87,12 +85,12 @@ def download_submissions(Subreddit, Sort = "Top", Limit = 75, TimeFilter = "Day"
 
   print(f"\n{successes}/{len(submissions)} images downloaded successfully")
   
-  print(
-    f"<details><summary>{len(submissions)}/{Limit} submissions:</summary><table><thead>"
-    "<tr><th>Number</th><th>Title</th><th>Upvotes</th><th>Comments</th></tr></thead><tbody><tr>" +
-    "</tr><tr>".join([f"<td>{i+1}</td><td>{s.title}</td><td>{s.score:,}</td><td>{s.num_comments:,}</td>" for i, s in enumerate(submissions)]) +
-    "</tbody></tr></table></details>"
-  )
+  #print(
+  #  f"<details><summary>{len(submissions)}/{Limit} submissions:</summary><table><thead>"
+  #  "<tr><th>Number</th><th>Title</th><th>Upvotes</th><th>Comments</th></tr></thead><tbody><tr>" +
+  #  "</tr><tr>".join([f"<td>{i+1}</td><td>{s.title}</td><td>{s.score:,}</td><td>{s.num_comments:,}</td>" for i, s in enumerate(submissions)]) +
+  #  "</tbody></tr></table></details>"
+  #)
   
   return (submissions, images)
 
@@ -167,7 +165,6 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
         "subtitles",
         filename="titles.srt",
         fontsdir="res/fonts/",
-        alpha=None,
         force_style="Alignment=1,Fontname=Obelix Pro,Fontsize=9,PrimaryColour=&HAAFFFFFF,OutlineColour=&HAA000000"
       )
     
@@ -258,11 +255,9 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
     raise e
 
 
-def upload(Title):
+def upload(youtube, Title, Privacy = "Public"):
   Description = "Like, subscribe and comment for 12 years of good luck\n\nMemes daily, SUBSCRIBE for more funny best memes compilation, clean memes, dank memes & tik tok memes of 2019.\ntik tok ironic memes compilation, family friendly pewdiepie memes, dog & cat reddit memes."
   Tags = "memes,dank doodle memes,best memes,memes compilation,dank memes,memes 2019,funny memes,dank memes compilation,best memes compilation,meme,funny,fortnite memes,tik tok ironic memes compilation,freememeskids,pewdiepie,try not to laugh challenge,you laugh you lose challenge,funniest memes,ddm,memes i like to watch,ultimate memes compilation,dank,compilation,tik tok memes,2019,meme review,dog memes,cat memes,spongebob memes,tiktok,memes to watch"
-  Privacy = "Public" #@param ["Public", "Private", "Unlisted"]
-  #@markdown ---
 
   video = "video.mp4"
 
@@ -297,58 +292,53 @@ def upload(Title):
       return insert_response['id']
 
 
-def upload_thumbnail(video_id):
-  Style = "Just a Meme" #@param ["Clumsy-esque", "Just a Meme"]
-  ThumbnailBackground = "White" #@param ["White", "Red", "Green", "Blue", "Black"] {allow-input: true}
-  # https://ffmpeg.org/ffmpeg-utils.html#Color
-  #@markdown ---
-  #@markdown ##### **Just a Meme**
-  ThumbnailNumber = 0 #@param {type:"integer"}
-  #@markdown ---
-  #@markdown ##### **Clumsy-esque**
-  Caption = "" #@param {type: "string"}
-  ThumbnailURL = "https://i.ytimg.com/vi/kEQs3MO4rTc/hqdefault.jpg" #@param {type: "string"}
-  #@markdown ---
-
+def gen_thumbnail(image):
   resolution = {"w": "1280", "h": "720"}
 
+  task = (
+    ffmpeg.input("pipe:0", format="ppm_pipe")
+    .filter("scale", **resolution, force_original_aspect_ratio="decrease")
+    .filter("pad", **resolution, x="-1", y="-1", color="white")
+    .output("pipe:1", f="singlejpeg", nostats=None, hide_banner=None, loglevel="warning")
+  )
+
+  job = task.run_async(pipe_stdin=True, pipe_stdout=True, pipe_stderr=True)
+
+  image.save(job.stdin, "PPM")
+  
+  return job
+
+
+def gen_clickbait(url, caption):
+  resolution = {"w": "1280", "h": "720"}
+  
+  if len(caption) > 0:
+    task = (
+      ffmpeg.input("pipe:0", format="ppm_pipe")
+      .filter("scale", w="1280", h="640", force_original_aspect_ratio="decrease")
+      .filter("pad", **resolution, x="-1", y="oh-ih", color="white")
+      .drawtext(caption, fontfile="fonts/font.ttf", fontsize="40", x="(w-tw)/2", y="40-(th/2)")
+      .output("pipe:1", f="singlejpeg", nostats=None, hide_banner=None, loglevel="warning")
+    )
+  else:
+    task = (
+      ffmpeg.input("pipe:0", format="ppm_pipe")
+      .filter("scale", **resolution, force_original_aspect_ratio="decrease")
+      .filter("pad", **resolution, x="-1", y="-1", color="white")
+      .output("pipe:1", f="singlejpeg", nostats=None, hide_banner=None, loglevel="warning")
+    )
+    
+  job = task.run_async(pipe_stdin=True, pipe_stdout=True, pipe_stderr=True)
+
+  Image.open(BytesIO(requests.get(url).content)).save(job.stdin, "PPM")
+  
+  return job
+
+def upload_thumbnail(youtube, job, video_id):
   try:
-    if Style == "Just a Meme":
-      task = (
-        ffmpeg.input("pipe:0", format="ppm_pipe")
-        .filter("scale", **resolution, force_original_aspect_ratio="decrease")
-        .filter("pad", **resolution, x="-1", y="-1", color=ThumbnailBackground.lower())
-        .output("pipe:1", f="singlejpeg", **quiet)
-      )
-
-      job = task.run_async(pipe_stdin=True, pipe_stdout=True, pipe_stderr=True)
-
-      images[ThumbnailNumber].save(job.stdin, "PPM")
-    elif Style == "Clumsy-esque":
-      if len(Caption) > 0:
-        task = (
-          ffmpeg.input("pipe:0", format="ppm_pipe")
-          .filter("scale", w="1280", h="640", force_original_aspect_ratio="decrease")
-          .filter("pad", **resolution, x="-1", y="oh-ih", color=ThumbnailBackground.lower())
-          .drawtext(Caption, fontfile="fonts/font.ttf", fontsize="40", x="(w-tw)/2", y="40-(th/2)")
-          .output("pipe:1", f="singlejpeg", **quiet)
-        )
-      else:
-        task = (
-          ffmpeg.input("pipe:0", format="ppm_pipe")
-          .filter("scale", **resolution, force_original_aspect_ratio="decrease")
-          .filter("pad", **resolution, x="-1", y="-1", color=ThumbnailBackground.lower())
-          .output("pipe:1", f="singlejpeg", **quiet)
-        )
-
-      job = task.run_async(pipe_stdin=True, pipe_stdout=True, pipe_stderr=True)
-
-      Image.open(BytesIO(requests.get(ThumbnailURL).content)).save(job.stdin, "PPM")
-
     job.stdin.close()
     job.wait()
 
-    print(*task.compile())
     print(job.stderr.read().decode())
   except ffmpeg.Error as err:
     print(e)
@@ -370,7 +360,7 @@ def upload_thumbnail(video_id):
     print("The custom thumbnail was successfully set.")
 
 
-def like_video(video_id):
+def like_video(youtube, video_id):
   try:
     youtube.videos().rate(id=video_id, rating="like").execute(num_retries=5)
   except HttpError as e:
@@ -379,7 +369,7 @@ def like_video(video_id):
     print("Video liked successfully")
 
 
-def upload_captions(video_id):
+def upload_captions(youtube, video_id):
   try:
     youtube.captions().insert(
       part="snippet",
@@ -415,18 +405,23 @@ def upload_captions(video_id):
 
 
 if __name__ == "__main__":
+  import argparse
   parser = argparse.ArgumentParser()
   parser.add_argument('name', help='the name of the video, with every {} being replaced with the video number', type=str)
   args = parser.parse_args()
   
-  submissions, images = download_submissions(["dankmemes","me_irl","meirl","memes","wholesomememes","MemeEconomy","BikiniBottomTwitter"])
-  video = render(submissions, images, True)
-  youtube = authenticate()
-  video_id = upload(args.name.replace('{}',str((date.today()-date(2020,1,16)).days)))
-  like_video(video_id)
-  #upload_captions(video_id)
+  posts, imgs = download_submissions(["dankmemes","me_irl","meirl","memes","wholesomememes","MemeEconomy","BikiniBottomTwitter"])
+  render(posts, imgs, True)
+  yt = authenticate()
+  video_id = upload(yt, args.name.replace('{}',str((date.today()-date(2020,1,16)).days)))
+  upload_thumbnail(yt, gen_thumbnail(imgs[0]), video_id)
+  like_video(yt, video_id)
+  #upload_captions(yt, video_id)
   
-  print("Video: https://youtube.com/watch?v={0}\n"
-  "Studio: https://studio.youtube.com/video/{0}/edit\n"
-  "Endscreen: https://www.youtube.com/endscreen?v={0}&nv=1\n"
-  "Translations: https://studio.youtube.com/video/{0}/translations".format(video_id))
+  print(
+    "Video: https://youtube.com/watch?v={0}\n"
+    "Studio: https://studio.youtube.com/video/{0}/edit\n"
+    "Endscreen: https://www.youtube.com/endscreen?v={0}&nv=1\n"
+    "Translations: https://studio.youtube.com/video/{0}/translations"
+    .format(video_id)  
+  )

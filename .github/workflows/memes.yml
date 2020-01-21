@@ -3,6 +3,7 @@ name: Memes
 on:
   schedule:
     - cron: "0 8 * * *"
+  push:
 
 jobs:
   memes:
@@ -20,7 +21,6 @@ jobs:
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       run: |
-        choco install ffmpeg
-        python3 -m pip install --upgrade pip
-        python3 -m pip install -r requirements.txt
-        python3 sparkmemes.py "Epicly dank memes v{}"
+        choco install ffmpeg --no-progress
+        python -m pip install -r requirements.txt
+        python sparkmemes.py "Epicly dank memes v{}"
