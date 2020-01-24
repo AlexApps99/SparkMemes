@@ -265,7 +265,7 @@ def upload(youtube, Title, Description, Tags, Privacy = "Public"):
       "snippet": {
         "title": Title,
         "description": Description,
-        "tags": Tags.split(","),
+        "tags": Tags,
         "categoryId": 23, # Comedy
         "defaultLanguage": "en"
       },
