@@ -1,4 +1,4 @@
-name: Memes
+name: Epicly dank memes
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   memes:
-    name: Memes
+    name: Epicly dank memes
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -18,7 +18,7 @@ jobs:
         sudo apt-get install python3-setuptools ffmpeg
     - name: Install requirements.txt
       run: python3 -m pip install -r requirements.txt
-    - name: Create memes
+    - name: Create video
       env:
         praw_client_id: ${{ secrets.REDDIT_CLIENT_ID }}
         praw_client_secret: ${{ secrets.REDDIT_CLIENT_SECRET }}
@@ -26,4 +26,4 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: python3 sparkmemes.py "Epicly dank memes v{}"
+      run: python3 sparkmemes.py "Epicly dank memes v{}" 15 --subreddits dankmemes me_irl meirl memes wholesomememes MemeEconomy BikiniBottomTwitter

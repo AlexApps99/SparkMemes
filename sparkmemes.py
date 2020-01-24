@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from datetime import date, datetime
+from datetime import datetime, timedelta, timezone
 
 import requests
 from os import getenv, path
@@ -255,10 +255,7 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
     raise e
 
 
-def upload(youtube, Title, Privacy = "Public"):
-  Description = "Like, subscribe and comment for 12 years of good luck\n\nMemes daily, SUBSCRIBE for more funny best memes compilation, clean memes, dank memes & tik tok memes of 2019.\ntik tok ironic memes compilation, family friendly pewdiepie memes, dog & cat reddit memes."
-  Tags = "memes,dank doodle memes,best memes,memes compilation,dank memes,memes 2019,funny memes,dank memes compilation,best memes compilation,meme,funny,fortnite memes,tik tok ironic memes compilation,freememeskids,pewdiepie,try not to laugh challenge,you laugh you lose challenge,funniest memes,ddm,memes i like to watch,ultimate memes compilation,dank,compilation,tik tok memes,2019,meme review,dog memes,cat memes,spongebob memes,tiktok,memes to watch"
-
+def upload(youtube, Title, Description, Tags, Privacy = "Public"):
   video = "video.mp4"
 
   if not path.exists(video):
@@ -408,12 +405,16 @@ if __name__ == "__main__":
   import argparse
   parser = argparse.ArgumentParser()
   parser.add_argument('name', help='the name of the video, with every {} being replaced with the video number', type=str)
+  parser.add_argument('offset', help='the number of days since 2020 that should set the version number', type=int)
+  parser.add_argument('--subreddits', type=str, nargs='+', help='a list of subreddits to be compiled', default=["all"])
+  parser.add_argument('--description', type=str, help='description (duh)', default="Like, subscribe and comment for 12 years of good luck\n\nMemes daily, SUBSCRIBE for more funny best memes compilation, clean memes, dank memes & tik tok memes of 2019.\ntik tok ironic memes compilation, family friendly pewdiepie memes, dog & cat reddit memes.")
+  parser.add_argument('--tags', type=str, nargs='+', help='tags (duh)', default=['memes', 'dank doodle memes', 'best memes', 'memes compilation', 'dank memes', 'memes 2019', 'funny memes', 'dank memes compilation', 'best memes compilation', 'meme', 'funny', 'fortnite memes', 'tik tok ironic memes compilation', 'freememeskids', 'pewdiepie', 'try not to laugh challenge', 'you laugh you lose challenge', 'funniest memes', 'ddm', 'memes i like to watch', 'ultimate memes compilation', 'dank', 'compilation', 'tik tok memes', '2019', 'meme review', 'dog memes', 'cat memes', 'spongebob memes', 'tiktok', 'memes to watch'])
   args = parser.parse_args()
   
-  posts, imgs = download_submissions(["dankmemes","me_irl","meirl","memes","wholesomememes","MemeEconomy","BikiniBottomTwitter"])
+  posts, imgs = download_submissions(args.subreddits)
   render(posts, imgs, True)
   yt = authenticate()
-  video_id = upload(yt, args.name.replace('{}',str((date.today()-date(2020,1,16)).days)))
+  video_id = upload(yt, args.name.replace('{}',str((datetime.now(timezone.utc)-(datetime(2020,1,1,tzinfo=timezone.utc)+timedelta(days=args.offset))).days), args.description, args.tags)
   upload_thumbnail(yt, gen_thumbnail(imgs[0]), video_id)
   upload_captions(yt, video_id, "authors")
   #upload_captions(yt, video_id, "titles")
