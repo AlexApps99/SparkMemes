@@ -414,7 +414,7 @@ if __name__ == "__main__":
   posts, imgs = download_submissions(args.subreddits)
   render(posts, imgs, True)
   yt = authenticate()
-  video_id = upload(yt, args.name.replace('{}',str((datetime.now(timezone.utc)-(datetime(2020,1,1,tzinfo=timezone.utc)+timedelta(days=args.offset))).days), args.description, args.tags)
+  video_id = upload(yt, args.name.replace('{}',str((datetime.now(timezone.utc)-(datetime(2020,1,1,tzinfo=timezone.utc)+timedelta(days=args.offset))).days)), args.description, args.tags)
   upload_thumbnail(yt, gen_thumbnail(imgs[0]), video_id)
   upload_captions(yt, video_id, "authors")
   #upload_captions(yt, video_id, "titles")

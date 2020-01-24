@@ -26,4 +26,4 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: python3 sparkmemes.py "Epicly dank memes v{}" 15 --subreddits dankmemes me_irl meirl memes wholesomememes MemeEconomy BikiniBottomTwitter
+      run: python3 sparkmemes.py "Epicly dank memes v{}" 16 --subreddits dankmemes me_irl meirl memes wholesomememes MemeEconomy BikiniBottomTwitter
