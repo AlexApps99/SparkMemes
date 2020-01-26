@@ -1,0 +1,29 @@
+name: Facebook cringe
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+
+jobs:
+  memes:
+    name: Facebook cringe
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install FFmpeg
+      run: |
+        sudo apt-get update &&
+        sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -yu &&
+        sudo apt-get install python3-setuptools ffmpeg
+    - name: Install requirements.txt
+      run: python3 -m pip install -r requirements.txt
+    - name: Create video
+      env:
+        praw_client_id: ${{ secrets.REDDIT_CLIENT_ID }}
+        praw_client_secret: ${{ secrets.REDDIT_CLIENT_SECRET }}
+        praw_user_agent: ${{ secrets.REDDIT_USER_AGENT }}
+        YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+        YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      run: python3 sparkmemes.py "Facebook cringe v{}" 27 --subreddits terriblefacebookmemes insanepeoplefacebook --tags insanepeoplefacebook "facebook memes" "cringy facebook" cringe "minion memes"
