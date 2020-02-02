@@ -1,4 +1,4 @@
-name: Facebook cringe
+name: insanepeoplefacebook
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   memes:
-    name: Facebook cringe
+    name: insanepeoplefacebook
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -26,4 +26,15 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: python3 sparkmemes.py "Facebook cringe v{}" 27 --subreddits terriblefacebookmemes insanepeoplefacebook --tags insanepeoplefacebook "facebook memes" "cringy facebook" cringe "minion memes"
+      run: >
+        python3 sparkmemes.py "insanepeoplefacebook v{}" 27
+        --subreddits "terriblefacebookmemes" "insanepeoplefacebook"
+        --tags "facebook memes" "cringy facebook"
+        "cringe" "minion memes" "reddit" "r/" "sub" "subreddit" "best of reddit"
+        "reddit top posts" "top posts" "top posts of all times" "funniest posts"
+        "funny" "comedy" "funniest reddit posts" "funny reddit posts"
+        "funny reddit" "r/insanepeoplefacebook" "insane people facebook"
+        "insanepeoplefacebook" "facebook" "r/insanepeoplefacebook top posts"
+        "r/insane people facebook" "reddit facebook" "top posts of all time"
+        "r/insane people facebook" "best of r/insanepeoplefacebook"
+        "r/ insanepeoplefacebook" "reddit insanepeoplefacebook"

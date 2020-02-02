@@ -26,4 +26,11 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: python3 sparkmemes.py "Funny r/woooosh moments v{}" 21 --subreddits woooosh --tags r/woosh r/wooosh r/woooosh funny "over their heads" "not getting the joke"
+      run: >
+        python3 sparkmemes.py "Funny r/woooosh moments v{}" 21
+        --subreddits "woooosh"
+        --tags "r/woosh" "r/wooosh" "over their heads" "not getting the joke"
+        "reddit" "r/woooosh" "woooosh" "top reddit posts" "best reddit posts"
+        "r/woooosh top posts" "top posts of all time" "funny" "interesting"
+        "memes" "jokes" "best posts" "top posts" "dank doodle memes" "giofilms"
+        "emkay" "sorrowtv"

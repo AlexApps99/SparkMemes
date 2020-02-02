@@ -408,7 +408,7 @@ if __name__ == "__main__":
   parser.add_argument('offset', help='the number of days since 2020 that should set the version number', type=int)
   parser.add_argument('--subreddits', type=str, nargs='+', help='a list of subreddits to be compiled', default=["all"])
   parser.add_argument('--description', type=str, help='description (duh)', default="Like, subscribe and comment for 12 years of good luck\n\nMemes daily, SUBSCRIBE for more funny best memes compilation, clean memes, dank memes & tik tok memes of 2019.\ntik tok ironic memes compilation, family friendly pewdiepie memes, dog & cat reddit memes.")
-  parser.add_argument('--tags', type=str, nargs='+', help='tags (duh)', default=['memes', 'dank doodle memes', 'best memes', 'memes compilation', 'dank memes', 'memes 2019', 'funny memes', 'dank memes compilation', 'best memes compilation', 'meme', 'funny', 'fortnite memes', 'tik tok ironic memes compilation', 'freememeskids', 'pewdiepie', 'try not to laugh challenge', 'you laugh you lose challenge', 'funniest memes', 'ddm', 'memes i like to watch', 'ultimate memes compilation', 'dank', 'compilation', 'tik tok memes', '2019', 'meme review', 'dog memes', 'cat memes', 'spongebob memes', 'tiktok', 'memes to watch'])
+  parser.add_argument('--tags', type=str, nargs='+', help='tags (duh)')
   args = parser.parse_args()
   
   posts, imgs = download_submissions(args.subreddits)

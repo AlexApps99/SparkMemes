@@ -26,4 +26,16 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: python3 sparkmemes.py "Epicly dank memes v{}" 16 --subreddits dankmemes me_irl meirl memes wholesomememes MemeEconomy BikiniBottomTwitter
+      run: >
+        python3 sparkmemes.py "Epicly dank memes v{}" 16
+        --subreddits "dankmemes" "me_irl" "meirl" "memes" "wholesomememes"
+        "MemeEconomy" "BikiniBottomTwitter"
+        --tags "memes" "dank doodle memes" "best memes" "memes compilation"
+        "dank memes" "memes 2019" "funny memes" "dank memes compilation"
+        "best memes compilation" "meme" "funny" "fortnite memes"
+        "tik tok ironic memes compilation" "freememeskids" "pewdiepie"
+        "try not to laugh challenge" "you laugh you lose challenge"
+        "funniest memes" "ddm" "memes i like to watch"
+        "ultimate memes compilation" "dank" "compilation" "tik tok memes"
+        "2019" "meme review" "dog memes" "cat memes" "spongebob memes" "tiktok"
+        "memes to watch"
