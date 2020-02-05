@@ -22,6 +22,8 @@ if __name__ == "__main__":
     "scope": " ".join(scope)
   }).json()
 
+  print(one)
+
   print(f"Visit {one['verification_url']} and type in \"{one['user_code']}\".")
 
   done = False
@@ -37,6 +39,7 @@ if __name__ == "__main__":
     done = True if two.status_code == 200 else False
 
   two = two.json()
+  print(two)
 
   print(
     f"\n\nDevice code: {one['device_code']}\n"
