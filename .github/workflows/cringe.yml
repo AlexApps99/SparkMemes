@@ -1,4 +1,4 @@
-name: insanepeoplefacebook
+name: therewasanattempt
 
 on:
   schedule:
@@ -27,14 +27,10 @@ jobs:
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       run: >
-        python3 sparkmemes.py "insanepeoplefacebook v{}" 27
-        --subreddits "terriblefacebookmemes" "insanepeoplefacebook"
-        --tags "facebook memes" "cringy facebook"
-        "cringe" "minion memes" "reddit" "sub" "subreddit" "best of reddit"
-        "reddit top posts" "top posts" "top posts of all times" "funniest posts"
-        "funny" "comedy" "funniest reddit posts" "funny reddit posts"
-        "funny reddit" "r/insanepeoplefacebook" "insane people facebook"
-        "insanepeoplefacebook" "facebook" "r/insanepeoplefacebook top posts"
-        "reddit facebook" "top posts of all time"
-        "r/insane people facebook" "best of r/insanepeoplefacebook"
-        "reddit insanepeoplefacebook"
+        python3 sparkmemes.py "r/therewasanattempt v{}" 65
+        --subreddits "therewasanattempt"
+        --tags "There Was An Attempt - EPIC FAILS" "reddit" "funny"
+        "epic fails" "epic" "fails" "funny fails" "r/" "giofilms" "sorrow tv"
+        "rslash" "comedy" "memes" "dank doodle memes" "ddm" "best posts"
+        "top reddit posts" "reddit stories" "cringe" "reddit cringe"
+        "funniest" "fail"

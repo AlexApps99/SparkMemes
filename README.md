@@ -1,4 +1,4 @@
-[![Facebook cringe](https://github.com/AlexApps99/SparkMemes/workflows/Facebook%20cringe/badge.svg)](https://github.com/AlexApps99/SparkMemes/actions?query=workflow%3A%22Facebook+cringe%22)
+[![r/therewasanattempt](https://github.com/AlexApps99/SparkMemes/workflows/therewasanattempt/badge.svg)](https://github.com/AlexApps99/SparkMemes/actions?query=workflow%3A%22therewasanattempt%22)
 [![Epicly dank memes](https://github.com/AlexApps99/SparkMemes/workflows/Epicly%20dank%20memes/badge.svg)](https://github.com/AlexApps99/SparkMemes/actions?query=workflow%3A%22Epicly+dank+memes%22)
 [![The best of r/mildlyinfuriating](https://github.com/AlexApps99/SparkMemes/workflows/The%20best%20of%20r/mildlyinfuriating/badge.svg)](https://github.com/AlexApps99/SparkMemes/actions?query=workflow%3A%22The+best+of+r%2Fmildlyinfuriating%22)
 [![Funny r/woooosh moments](https://github.com/AlexApps99/SparkMemes/workflows/Funny%20r/woooosh%20moments/badge.svg)](https://github.com/AlexApps99/SparkMemes/actions?query=workflow%3A%22Funny+r%2Fwoooosh+moments%22)
