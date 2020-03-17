@@ -6,9 +6,9 @@ from time import sleep
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
-  parser.add_argument('client_id', type=str, help='client id for api')
-  parser.add_argument('client_secret', type=str, help='client secret for api')
-  #parser.add_argument('scope', type=str, nargs='+', help='scopes for api')
+  parser.add_argument("client_id", type=str, help="client id for api")
+  parser.add_argument("client_secret", type=str, help="client secret for api")
+  #parser.add_argument("scope", type=str, nargs="+", help="scopes for api")
   args = parser.parse_args()
   client_id = args.client_id
   client_secret = args.client_secret
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
   zero = requests.get("https://accounts.google.com/.well-known/openid-configuration").json()
 
-  one = requests.post(zero['device_authorization_endpoint'], params={
+  one = requests.post(zero["device_authorization_endpoint"], params={
     "client_id": client_id,
     "scope": " ".join(scope)
   }).json()
@@ -29,11 +29,11 @@ if __name__ == "__main__":
   done = False
 
   while not done:
-    sleep(one['interval'])
-    two = requests.post(zero['token_endpoint'], params={
+    sleep(one["interval"])
+    two = requests.post(zero["token_endpoint"], params={
       "client_id": client_id,
       "client_secret": client_secret,
-      "device_code": one['device_code'],
+      "device_code": one["device_code"],
       "grant_type": "urn:ietf:params:oauth:grant-type:device_code"
     })
     done = True if two.status_code == 200 else False

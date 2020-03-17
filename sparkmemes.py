@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta, timezone
 
 import requests
-from os import getenv, path
+from os import getenv, path, remove
 
 from google.oauth2.credentials import Credentials
 from apiclient.discovery import build
@@ -20,18 +20,11 @@ from apiclient.errors import HttpError
 
 #import gtts
 
-def authenticate():
-  creds = Credentials(
-    token=None,
-    refresh_token=getenv('YT_REFRESH_TOKEN'),
-    token_uri="https://oauth2.googleapis.com/token",
-    client_id=getenv('YT_CLIENT_ID'),
-    client_secret=getenv('YT_CLIENT_SECRET'),
-    scopes=["https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.upload"]
-  )
+# TODO REFACTOR INTO CLASSES
 
-  return build("youtube", "v3", credentials=creds)
-
+################################################################################
+# Video generation
+################################################################################
 
 def download_submissions(Subreddit, Sort = "Top", Limit = 75, TimeFilter = "Day"):
   Subreddit = "+".join(Subreddit)
@@ -250,9 +243,45 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
     genCaptions(open("titles.srt", "w"), [s.title for s in submissions], 10)
     genCaptions(open("authors.srt", "w"), [f"/u/{s.author.name if s.author else '[deleted]'}" for s in submissions], 10)
 
+    try:
+      remove("main.nut")
+    except:
+      print("Could not delete main.nut")
+
   except Exception as e:
     print("stderr:\n" + job.stderr.read().decode())
     raise e
+
+#def record_tts():
+#  successes = 0
+#
+#  tts_audio = [BytesIO() for s in submissions]
+#  for x, s in tqdm(enumerate(submissions), "TTS recordings downloaded", len(submissions), unit="tts"):
+#    try:
+#      gtts.gTTS(s.title, lang="en").write_to_fp(tts_audio[x])
+#      successes += 1
+#    except gtts.gTTSError as err:
+#      print("Error on", s.title)
+#      print(err.infer_msg())
+#      print(err)
+#
+#  print(f"{successes}/{len(submissions)} successful TTS recordings")
+
+################################################################################
+# YouTube
+################################################################################
+
+def authenticate():
+  creds = Credentials(
+    token=None,
+    refresh_token=getenv('YT_REFRESH_TOKEN'),
+    token_uri="https://oauth2.googleapis.com/token",
+    client_id=getenv('YT_CLIENT_ID'),
+    client_secret=getenv('YT_CLIENT_SECRET'),
+    scopes=["https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.upload"]
+  )
+
+  return build("youtube", "v3", credentials=creds)
 
 
 def upload(youtube, Title, Description, Tags, Privacy = "Public"):
@@ -384,22 +413,9 @@ def upload_captions(youtube, video_id, name):
   else:
     print("Captions added successfully")
 
-
-#def record_tts():
-#  successes = 0
-#
-#  tts_audio = [BytesIO() for s in submissions]
-#  for x, s in tqdm(enumerate(submissions), "TTS recordings downloaded", len(submissions), unit="tts"):
-#    try:
-#      gtts.gTTS(s.title, lang="en").write_to_fp(tts_audio[x])
-#      successes += 1
-#    except gtts.gTTSError as err:
-#      print("Error on", s.title)
-#      print(err.infer_msg())
-#      print(err)
-#
-#  print(f"{successes}/{len(submissions)} successful TTS recordings")
-
+################################################################################
+# Main/commandline usage
+################################################################################
 
 if __name__ == "__main__":
   import argparse
@@ -425,5 +441,5 @@ if __name__ == "__main__":
     "Studio: https://studio.youtube.com/video/{0}/edit\n"
     "Endscreen: https://www.youtube.com/endscreen?v={0}&nv=1\n"
     "Translations: https://studio.youtube.com/video/{0}/translations"
-    .format(video_id)  
+    .format(video_id)
   )
