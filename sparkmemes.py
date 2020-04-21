@@ -5,7 +5,7 @@ import requests
 from os import getenv, path, remove
 
 from google.oauth2.credentials import Credentials
-from apiclient.discovery import build
+from googleapiclient.discovery import build
 
 from random import shuffle
 import praw
@@ -15,8 +15,8 @@ from io import BytesIO
 
 import ffmpeg
 
-from apiclient.http import MediaFileUpload, MediaIoBaseUpload
-from apiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload, MediaIoBaseUpload
+from googleapiclient.errors import HttpError
 
 #import gtts
 

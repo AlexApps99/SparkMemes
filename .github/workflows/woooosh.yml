@@ -9,15 +9,24 @@ jobs:
     name: Funny r/woooosh moments
     runs-on: ubuntu-latest
     steps:
+
     - name: Checkout repository
       uses: actions/checkout@v2
+
     - name: Install FFmpeg
-      run: |
+      run: >
         sudo apt-get update &&
         sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -yu &&
-        sudo apt-get install python3-setuptools ffmpeg
-    - name: Install requirements.txt
-      run: python3 -m pip install -r requirements.txt
+        sudo apt-get install ffmpeg
+
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: "3.x"
+
+    - name: Install Python dependencies
+      run: python -m pip install -r requirements.txt
+
     - name: Create video
       env:
         praw_client_id: ${{ secrets.REDDIT_CLIENT_ID }}
