@@ -164,7 +164,7 @@ def render(submissions, images, ShowCaptions = True, ImageDelay = 10, Background
     task = (
       ffmpeg.output(
         mainstream,
-        ffmpeg.input("res/loops/FluffingADuck.mp3", stream_loop="-1"),
+        ffmpeg.input("res/loops/PizzaParlor.mp3", stream_loop="-1"),
         "main.nut",
         shortest=None,
         max_muxing_queue_size="1024",
