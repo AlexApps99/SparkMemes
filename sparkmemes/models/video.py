@@ -58,7 +58,7 @@ class Video:
         ).save(self.titles)
         self.authors = "authors.srt"
         Subtitles(
-            [m.author for m in self.memes], self.image_delay, len(self.intro)
+            ["u/" + m.author for m in self.memes], self.image_delay, len(self.intro)
         ).save(self.authors)
 
     def prerender(self):

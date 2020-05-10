@@ -2,7 +2,7 @@ import enum
 import random
 
 # import praw
-from models.meme import Meme
+from .models.meme import Meme
 
 
 class RedditSort(enum.Enum):
@@ -58,26 +58,25 @@ class Reddit:
     def _filter_submissions_to_memes(submissions):
         # Make this much more customizable, as I will support text and video soon
         def filter_submission(s):
-            if s.is_self:
+            if s.stickied or s.over_18:
                 return False
-            elif not hasattr(s, "preview"):
-                return False
-            elif not s.preview["enabled"]:
-                return False
-            elif "reddit_video_preview" in s.preview:
-                return False
-            elif "mp4" in s.preview["images"][0]["variants"]:
-                return False
-            elif "gif" in s.preview["images"][0]["variants"]:
-                return False
-            elif s.stickied:
-                return False
-            elif s.over_18:
-                return False
-            else:
+            elif s.is_self:
                 return True
+            else:
+                if not hasattr(s, "preview"):
+                    return False
+                elif not s.preview["enabled"]:
+                    return False
+                elif "reddit_video_preview" in s.preview:
+                    return False
+                elif "mp4" in s.preview["images"][0]["variants"]:
+                    return False
+                elif "gif" in s.preview["images"][0]["variants"]:
+                    return False
+                else:
+                    return True
 
-        memes = [Meme.from_submission(s) for s in submissions if filter_submission(s)]
+        memes = [Meme(s) for s in submissions if filter_submission(s)]
 
         random.shuffle(memes)
 

@@ -1,94 +1,62 @@
-# TODO can ffmpeg handle image and video same way?
-
-from abc import ABC, abstractmethod
 import requests
 from io import BytesIO
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageFont, ImageDraw, UnidentifiedImageError
+import textwrap
 
 
-class Meme(ABC):
-    def __init__(self, submission):
-        self.author = "/u/" + (
-            submission.author.name if submission.author else "[deleted]"
+def _text_to_img(text, resolution=(1920, 1080), pad=(12, 2)):
+    font = ImageFont.truetype("res/fonts/NotoSans.ttf", 18)
+
+    img = Image.new("RGBA", resolution, (26, 26, 27, 0))
+    draw = ImageDraw.Draw(img)
+
+    for x in range(250, 150, -5):
+        wtext = textwrap.fill(
+            text, width=x, replace_whitespace=False, break_long_words=True
         )
+        res = draw.multiline_textsize(wtext, font)
+        # Only pad left/top
+        if res[0] + pad[0] < resolution[0]:
+            break
+    else:
+        return
+    draw.multiline_text(pad, wtext, (215, 218, 220), font)
+
+    return img
+
+
+class Meme:
+    def __init__(self, submission):
+        self.author = submission.author.name if submission.author else "[deleted]"
         self.title = submission.title
         self.subreddit = submission.subreddit.display_name
         self.post_url = submission.permalink
 
-    @staticmethod
-    def from_submission(submission):
-        return ImageMeme(submission)
-        # if is_text(submission):
-        # 	return TextMeme(submission)
-        # else if is_video(submission):
-        # 	return VideoMeme(submission)
-        # else if is_image(submission):
-        # 	return ImageMeme(submission)
-        # else:
-        #     return None
-
-    # Process whatever is stored
-    @abstractmethod
-    def process(self):
-        pass
-
-
-class MediaMeme(Meme):
-    def __init__(self, submission):
-        super().__init__(submission)
-        self.url = submission.url
-        self.data = None
+        if submission.is_self:
+            self.url = None
+            self.text = submission.selftext
+            self.data = BytesIO()
+            _text_to_img(self.text).save(self.data, "PNG")
+        else:
+            self.url = submission.preview["images"][0]["source"]["url"]
+            self.text = None
+            self.data = None
 
     # Download URL directly to self.data
     def download(self):
-        try:
-            r = requests.get(self.url)
-            r.raise_for_status()
-        except requests.exceptions.RequestException:
+        if self.url is not None:
+            try:
+                r = requests.get(self.url)
+                r.raise_for_status()
+            except requests.exceptions.RequestException:
+                return False
+
+            self.data = BytesIO(r.content)
+            return True
+        elif self.data is not None:
+            return True
+        else:
             return False
-
-        self.data = BytesIO(r.content)
-        return True
-
-    # Download to path, then set self.data to file object of path
-    def download_disk(self, path):
-        try:
-            r = requests.get(self.url, stream=True)
-            r.raise_for_status()  # TODO does this line delay saving?
-        except requests.exceptions.RequestException:
-            return False
-
-        # TODO error handling
-        with open(path, "wb") as f:
-            for chunk in r.iter_content(chunk_size=128):
-                f.write(chunk)
-
-        self.data = open(path, "rb")
-        return True
-
-    # Convert file to correct format, usually used within process
-    @abstractmethod
-    def convert(self):
-        pass
-
-    def process(self):
-        if self.download():
-            if self.convert():
-                return True
-
-        return False
-
-
-class TextMeme(Meme):
-    def __init__(self, submission):
-        super().__init__(submission)
-        self.text = submission.selftext
-
-
-class ImageMeme(MediaMeme):
-    def __init__(self, submission):
-        super().__init__(submission)
-        self.url = submission.preview["images"][0]["source"]["url"]
 
     def convert(self):
         try:
@@ -108,15 +76,17 @@ class ImageMeme(MediaMeme):
 
         return True
 
+    # Process whatever is stored
+    def process(self):
+        if self.download():
+            if self.convert():
+                return True
+
+        return False
+
     def tts_phrase(self):
         # TODO return OCR if confidence is high
-        return self.title
-
-
-class VideoMeme(MediaMeme):
-    def __init__(self, submission):
-        super().__init__(submission)
-        self.url = ""  # TODO
-
-    def convert(self):
-        return False
+        if self.text is not None:
+            return self.text
+        else:
+            return self.title
