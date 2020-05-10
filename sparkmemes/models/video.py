@@ -1,6 +1,9 @@
-from . import Meme, Subtitles
+from .meme import Meme
+from .subtitles import Subtitles
+from .tts import tts, concat_waves
 import ffmpeg
 from os import remove
+from io import BytesIO
 
 DEFAULT_CONFIG = {
     # Container: MP4
@@ -36,6 +39,7 @@ class Video:
         intro,
         memes,
         outro,
+        tts=True,
         image_delay=10,
         resolution=DEFAULT_RESOLUTION,
         config=DEFAULT_CONFIG,
@@ -43,6 +47,7 @@ class Video:
         self.intro = intro
         self.memes = memes
         self.outro = outro
+        self.tts = tts
         self.image_delay = image_delay
         width, height = resolution
         self.resolution = {"w": str(width), "h": str(height)}
@@ -79,6 +84,21 @@ class Video:
             Subtitles([m.title for m in self.memes], self.image_delay).save(
                 "tmp_titles.srt"
             )
+
+            audio = ffmpeg.input("res/loops/CoconutMall.mp3", stream_loop="-1")
+            if self.tts:
+                concat_waves(
+                    "tts.wav", [BytesIO(tts(m.tts_phrase())) for m in self.memes]
+                )
+                audio = ffmpeg.filter(
+                    [audio, ffmpeg.input("tts.wav")],
+                    "amix",
+                    duration="shortest",
+                    weights="0.5 2.0",
+                )
+            else:
+                pass
+
             mainstream = mainstream.filter(
                 "subtitles",
                 filename="tmp_titles.srt",
@@ -92,7 +112,7 @@ class Video:
 
             task = ffmpeg.output(
                 mainstream,
-                ffmpeg.input("res/loops/CoconutMall.mp3", stream_loop="-1"),
+                audio,
                 "main.nut",
                 shortest=None,
                 max_muxing_queue_size="1024",
@@ -114,6 +134,8 @@ class Video:
             job.wait()
             try:
                 remove("tmp_titles.srt")
+                if self.tts:
+                    remove("tts.wav")
             except OSError:
                 pass
 
