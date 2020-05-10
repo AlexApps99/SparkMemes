@@ -1,35 +1,69 @@
+import argparse
 from sparkmemes import *
 import praw
-from io import BytesIO
+from datetime import datetime, timedelta, timezone
 
 
-def main():
-    print("WIP")
+def main(subreddits, name, description, tags):
     intro = Transition(
         "res/intro/intro.png",
         "res/intro/intro.mp3",
         10,
-        "Testing the\nrefactored version",
+        "Whatever could this be for???",
     )
     outro = Transition(
         "res/outro/outro.png",
         "res/outro/outro.mp3",
         20,
-        "The end of this video\n(Please watch more)",
+        "The end of this video\n(More to come very soon)",
     )
-    memes = [
-        m
-        for m in Reddit(praw.Reddit()).download(
-            "maliciouscompliance+choosingbeggars", 20
-        )
-        if m.process()
-    ]
-    concat_waves("tts.wav", [BytesIO(tts(m.tts_phrase())) for m in memes])
+    memes = [m for m in Reddit(praw.Reddit()).download(subreddits, 75) if m.process()]
 
     vid = Video(intro, memes, outro)
     vid.prerender()
     vid.render()
+    video = YouTube().upload("video.mp4", name, args.description, args.tags)
+    video.like()
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "name",
+        help="the name of the video, with every {} being replaced with the video number",
+        type=str,
+    )
+    parser.add_argument(
+        "offset",
+        help="the number of days since 2020 that should set the version number",
+        type=int,
+    )
+    parser.add_argument(
+        "--subreddits",
+        type=str,
+        nargs="+",
+        help="a list of subreddits to be compiled",
+        default=["all"],
+    )
+    parser.add_argument(
+        "--description",
+        type=str,
+        help="description (duh)",
+        default="Like, subscribe and comment for 12 years of good luck\n\nMemes daily, SUBSCRIBE for more funny best memes compilation, clean memes, dank memes & tik tok memes of 2019.\ntik tok ironic memes compilation, family friendly pewdiepie memes, dog & cat reddit memes.",
+    )
+    parser.add_argument("--tags", type=str, nargs="+", help="tags (duh)")
+    args = parser.parse_args()
+
+    name = args.name.replace(
+        "{}",
+        str(
+            (
+                datetime.now(timezone.utc)
+                - (
+                    datetime(2020, 1, 1, tzinfo=timezone.utc)
+                    + timedelta(days=args.offset)
+                )
+            ).days
+        ),
+    )
+    main(args.subreddits, name, args.description, args.tags)

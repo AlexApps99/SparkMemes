@@ -94,7 +94,7 @@ class Video:
                     [audio, ffmpeg.input("tts.wav")],
                     "amix",
                     duration="shortest",
-                    weights="0.5 2.0",
+                    weights="0.5 2.5",
                 )
             else:
                 pass

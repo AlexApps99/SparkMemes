@@ -87,6 +87,7 @@ class Meme:
     def tts_phrase(self):
         # TODO return OCR if confidence is high
         if self.text is not None:
-            return self.text
+            # return self.text
+            return self.title
         else:
             return self.title

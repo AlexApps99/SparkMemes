@@ -26,7 +26,10 @@ jobs:
         praw_client_id: ${{ secrets.REDDIT_CLIENT_ID }}
         praw_client_secret: ${{ secrets.REDDIT_CLIENT_SECRET }}
         praw_user_agent: ${{ secrets.REDDIT_USER_AGENT }}
-      run: python -m sparkmemes
+        YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+        YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      run: python -m sparkmemes "Mystery Video..." 1
 
     - name: Upload stuff
       uses: actions/upload-artifact@v2
