@@ -7,20 +7,16 @@ on:
 jobs:
   memes:
     name: Epicly dank memes
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
 
     - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Install FFmpeg
-      run: >
-        sudo apt-get update &&
-        sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -yu &&
-        sudo apt-get install ffmpeg
-
+      run: brew install ffmpeg
     - name: Setup Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: "3.x"
 

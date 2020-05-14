@@ -1,12 +1,10 @@
-name: therewasanattempt
+name: Test
 
-on:
-  schedule:
-    - cron: "0 2 * * *"
+on: [push]
 
 jobs:
-  memes:
-    name: insanepeoplefacebook
+  test:
+    name: Test
     runs-on: macos-latest
     steps:
 
@@ -31,11 +29,9 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: >
-        python3 sparkmemes.py "r/therewasanattempt v{}" 65
-        --subreddits "therewasanattempt"
-        --tags "There Was An Attempt - EPIC FAILS" "reddit" "funny"
-        "epic fails" "epic" "fails" "funny fails" "r/" "giofilms" "sorrow tv"
-        "rslash" "comedy" "memes" "dank doodle memes" "ddm" "best posts"
-        "top reddit posts" "reddit stories" "cringe" "reddit cringe"
-        "funniest" "fail"
+      run: python -m sparkmemes "Test Video..." 1
+
+    - name: Upload stuff
+      uses: actions/upload-artifact@v2
+      with:
+        path: "video.mp4"
