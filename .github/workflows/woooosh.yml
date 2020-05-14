@@ -1,10 +1,12 @@
-name: Test
+name: Funny r/woooosh moments
 
-on: [push]
+on:
+  schedule:
+    - cron: "0 20 * * *"
 
 jobs:
-  test:
-    name: Test
+  memes:
+    name: Funny r/woooosh moments
     runs-on: macos-latest
     steps:
 
@@ -29,9 +31,11 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: python -m sparkmemes "Test Video..." 1
-
-    - name: Upload stuff
-      uses: actions/upload-artifact@v2
-      with:
-        path: "video.mp4"
+      run: >
+        python3 sparkmemes.py "Funny r/woooosh moments v{}" 21
+        --subreddits "woooosh"
+        --tags "r/woosh" "r/wooosh" "over their heads" "not getting the joke"
+        "reddit" "r/woooosh" "woooosh" "top reddit posts" "best reddit posts"
+        "r/woooosh top posts" "top posts of all time" "funny" "interesting"
+        "memes" "jokes" "best posts" "top posts" "dank doodle memes" "giofilms"
+        "emkay" "sorrowtv"

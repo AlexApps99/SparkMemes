@@ -1,10 +1,12 @@
-name: Test
+name: The best of r/mildlyinfuriating
 
-on: [push]
+on:
+  schedule:
+    - cron: "0 14 * * *"
 
 jobs:
-  test:
-    name: Test
+  memes:
+    name: The best of r/mildlyinfuriating
     runs-on: macos-latest
     steps:
 
@@ -29,9 +31,12 @@ jobs:
         YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
-      run: python -m sparkmemes "Test Video..." 1
-
-    - name: Upload stuff
-      uses: actions/upload-artifact@v2
-      with:
-        path: "video.mp4"
+      run: >
+        python3 sparkmemes.py "The best of r/mildlyinfuriating v{}" 27
+        --subreddits "mildlyinfuriating"
+        --tags "r/mildlyinfuriating" "mildlyinfuriating" "unsatisfying" "onejob"
+        "you had one job" "meme" "This video will make you mildly infuriated"
+        "mildly infuriated" "mildlyinfuriating" "funny" "mildly" "infuriating"
+        "infuriated" "funniest" "reddit" "memes" "dank doodle memes" "ddm"
+        "satisfying" "interesting" "top posts" "best posts" "sorrow tv"
+        "giofilms" "rslash"
