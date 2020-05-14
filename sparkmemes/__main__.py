@@ -2,6 +2,7 @@ import argparse
 from sparkmemes import *
 import praw
 from datetime import datetime, timedelta, timezone
+from os import getenv
 
 
 def main(subreddits, name, description, tags):
@@ -19,11 +20,22 @@ def main(subreddits, name, description, tags):
     )
     memes = [m for m in Reddit(praw.Reddit()).download(subreddits, 75) if m.process()]
 
-    vid = Video(intro, memes, outro)
+    if supports_tts() and check_supports_tts():
+        vid = Video(intro, memes, outro, True)
+    else:
+        vid = Video(intro, memes, outro, False)
     vid.prerender()
     vid.render()
-    video = YouTube().upload("video.mp4", name, args.description, args.tags)
-    video.like()
+    refr, client, secret = (
+        getenv("YT_REFRESH_TOKEN"),
+        getenv("YT_CLIENT_ID"),
+        getenv("YT_CLIENT_SECRET"),
+    )
+    if refr is not None and client is not None and secret is not None:
+        video = YouTube(refr, client, secret).upload(
+            "video.mp4", name, args.description, args.tags
+        )
+        video.like()
 
 
 if __name__ == "__main__":

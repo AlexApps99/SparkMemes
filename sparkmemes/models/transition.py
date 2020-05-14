@@ -41,9 +41,6 @@ class Transition:
         else:
             self.text = text
 
-    def __len__(self):
-        return self.length
-
     def to_ffmpeg_input(self, resolution):
         return (
             ffmpeg.input(self.background_path, loop="1", t=str(self.length))
@@ -56,7 +53,5 @@ class Transition:
                 fontfile="res/fonts/ObelixPro.ttf",
                 fontsize="48",
             ),
-            ffmpeg.input(self.audio_path).filter(
-                "atrim", duration=str(self.length)
-            ),  # "apad", whole_dur=str(self.length)
+            ffmpeg.input(self.audio_path).filter("atrim", duration=str(self.length)),
         )

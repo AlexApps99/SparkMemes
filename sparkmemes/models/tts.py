@@ -3,6 +3,7 @@ import wave
 import os
 
 
+# TODO audio desyncs over time
 def supports_tts():
     import platform
 
@@ -15,7 +16,7 @@ def say(*args):
     ).stdout.decode()
 
 
-def check_support():
+def check_supports_tts():
     required = {"voice": "Daniel", "file-format": "WAVE"}
 
     r = True
@@ -70,7 +71,11 @@ def concat_waves(file, waves, interval=10):
                     delay * final_wav.getnchannels() * final_wav.getsampwidth() * b"\0"
                 )
             else:  # Clip
-                print("Warning: TTS was clipped! ({} > {})".format(amount, space))
+                print(
+                    "Warning: TTS was clipped! Extend the interval! ({} > {})".format(
+                        amount, space
+                    )
+                )
                 final_wav.writeframes(w.readframes(space))
 
     for w in waves:

@@ -7,12 +7,7 @@ from googleapiclient.http import MediaFileUpload, MediaIoBaseUpload
 
 
 class YouTube:
-    def __init__(
-        self,
-        refresh_token=getenv("YT_REFRESH_TOKEN"),
-        client_id=getenv("YT_CLIENT_ID"),
-        client_secret=getenv("YT_CLIENT_SECRET"),
-    ):
+    def __init__(self, refresh_token, client_id, client_secret):
         self.creds = Credentials(
             token=None,
             refresh_token=refresh_token,
