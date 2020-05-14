@@ -32,7 +32,7 @@ jobs:
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       run: >
-        python3 sparkmemes.py "The best of r/mildlyinfuriating v{}" 27
+        python -m sparkmemes "The best of r/mildlyinfuriating v{}" 27
         --subreddits "mildlyinfuriating"
         --tags "r/mildlyinfuriating" "mildlyinfuriating" "unsatisfying" "onejob"
         "you had one job" "meme" "This video will make you mildly infuriated"
