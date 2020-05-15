@@ -32,7 +32,7 @@ jobs:
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       run: >
-        python3 sparkmemes.py "r/therewasanattempt v{}" 65
+        python -m sparkmemes "r/therewasanattempt v{}" 65
         --subreddits "therewasanattempt"
         --tags "There Was An Attempt - EPIC FAILS" "reddit" "funny"
         "epic fails" "epic" "fails" "funny fails" "r/" "giofilms" "sorrow tv"
