@@ -1,4 +1,4 @@
-name: Funny r/woooosh moments
+name: "Funny r/woooosh moments"
 
 on:
   schedule:
@@ -6,25 +6,25 @@ on:
 
 jobs:
   memes:
-    name: Funny r/woooosh moments
-    runs-on: windows-latest
+    name: "Funny r/woooosh moments"
+    runs-on: "windows-latest"
     timeout-minutes: 30
     steps:
 
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: "Checkout repository"
+      uses: "actions/checkout@v2"
 
-    - name: Install FFmpeg
-      run: choco install ffmpeg tesseract --pre
-    - name: Setup Python
-      uses: actions/setup-python@v2
+    - name: "Install dependencies"
+      run: "choco install --no-progress ffmpeg tesseract --pre"
+    - name: "Setup Python"
+      uses: "actions/setup-python@v2"
       with:
         python-version: "3.x"
 
-    - name: Install Python dependencies
-      run: python -m pip install -r requirements.txt
+    - name: "Install Python dependencies"
+      run: "python -m pip install -r requirements.txt"
 
-    - name: Create video
+    - name: "Create video"
       env:
         praw_client_id: ${{ secrets.REDDIT_CLIENT_ID }}
         praw_client_secret: ${{ secrets.REDDIT_CLIENT_SECRET }}
@@ -33,10 +33,9 @@ jobs:
         YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
         YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       run: >
-        python -m sparkmemes "Funny r/woooosh moments v{}" 21
+        python -m sparkmemes "Funny r/woooosh moments v{}" "21"
         --subreddits "woooosh"
         --tags "r/woosh" "r/wooosh" "over their heads" "not getting the joke"
-        "reddit" "r/woooosh" "woooosh" "top reddit posts" "best reddit posts"
-        "r/woooosh top posts" "top posts of all time" "funny" "interesting"
-        "memes" "jokes" "best posts" "top posts" "dank doodle memes" "giofilms"
-        "emkay" "sorrowtv"
+        "reddit" "woooosh" "top reddit posts" "best reddit posts"
+        "r/woooosh top posts" "funny" "interesting" "memes" "jokes"
+        "best posts" "dank doodle memes" "giofilms" "emkay" "sorrowtv"
