@@ -7,14 +7,15 @@ on:
 jobs:
   memes:
     name: The best of r/mildlyinfuriating
-    runs-on: macos-latest
+    runs-on: windows-latest
+    timeout-minutes: 15
     steps:
 
     - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Install FFmpeg
-      run: brew install ffmpeg
+      run: choco install ffmpeg tesseract --pre
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
