@@ -1,8 +1,15 @@
 class Subtitles:
     def __init__(self, phrases, interval, offset=0):
-        self.phrases = phrases
+        self.phrases = [tofu(x) for x in phrases]
         self.interval = interval
         self.offset = offset
+
+    # Makes sure only valid characters are displayed
+    @staticmethod
+    def tofu(string, valid=None):
+        if valid is None:
+            valid = "!\"#$%&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]_`abcdefghijklmnopqrstuvwxyz"
+        return ''.join([x if x in valid else ' ' for x in string])
 
     @staticmethod
     def _h_m_s_ms(seconds):
@@ -33,5 +40,5 @@ class Subtitles:
 
     # Saves subtitles to area on disk
     def save(self, path):
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             self._save(f)
