@@ -1,7 +1,6 @@
 import subprocess
 import wave
 import os
-import pyttsx3
 
 # TODO audio desyncs over time
 
@@ -11,34 +10,34 @@ class TTS:
         import platform
         return platform.system() == "Windows"
 
-    def __init__(self):
-        self.engine = pyttsx3.init("sapi5")
-        print(self._list_voices())
-        print(self._get_voice())
+    def __init__(self, balcon="res/tts/balcon.exe"):
+        self.balcon = balcon
+        print(self._list_voices().decode())
+
+    def _balcon(self, *args, **kwargs):
+        return subprocess.run(
+            [self.balcon, *args], check=True, stdout=subprocess.PIPE, **kwargs
+        ).stdout#.decode()
 
     def _list_voices(self):
-        return self.engine.getProperty("voices")
+        return self._balcon("-l")
 
-    def _get_voice(self):
-        return self.engine.getProperty("voice")
-
-    def _set_voice(self, name):
-        self.engine.setProperty("voice", name)
-
-    # TODO error handling
-    def say(self, phrase, voice=None, tmp="tmp.wav"):
-        if voice is not None:
-            self._set_voice(voice)
-
-        self.engine.save_to_file(phrase, tmp)
+    def say(self, phrase, voice=None):
         try:
-            with open(tmp, "rb") as f:
-                tts = f.read()
-            os.remove(tmp)
-        except OSError:
+            b = self._balcon(
+                #"-f", "tmp_titles.srt",
+                "-t", phrase,
+                *("-n", voice) if voice is not None else (),
+                "-enc", "utf8",
+                #"-sub",
+                #"--sub-fit",
+                #"--sub-max", "5",
+                "-o"
+            )
+        except subprocess.CalledProcessError as e:
             return None
         else:
-            return tts
+            return b
 
     @staticmethod
     def concat_waves(file, waves, interval=10):
