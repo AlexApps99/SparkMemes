@@ -1,6 +1,6 @@
 from .meme import Meme
 from .subtitles import Subtitles
-from .tts import tts, concat_waves
+from .tts import TTS
 import ffmpeg
 from os import remove
 from io import BytesIO
@@ -39,7 +39,7 @@ class Video:
         intro,
         memes,
         outro,
-        tts=True,
+        tts=TTS() if TTS.supports_tts() else None,
         image_delay=10,
         resolution=DEFAULT_RESOLUTION,
         config=DEFAULT_CONFIG,
@@ -86,9 +86,9 @@ class Video:
             )
 
             audio = ffmpeg.input("res/loops/CoconutMall.mp3", stream_loop="-1")
-            if self.tts:
-                concat_waves(
-                    "tts.wav", [BytesIO(tts(m.tts_phrase())) for m in self.memes]
+            if self.tts is not None:
+                TTS.concat_waves(
+                    "tts.wav", [BytesIO(self.tts.say(m.tts_phrase())) for m in self.memes]
                 )
                 audio = ffmpeg.filter(
                     [audio, ffmpeg.input("tts.wav")],
@@ -134,7 +134,7 @@ class Video:
             job.wait()
             try:
                 remove("tmp_titles.srt")
-                if self.tts:
+                if self.tts is not None:
                     remove("tts.wav")
             except OSError:
                 pass
