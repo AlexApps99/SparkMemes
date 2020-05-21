@@ -31,7 +31,7 @@ jobs:
       uses: "actions/checkout@v2"
 
     - name: "Install dependencies"
-      run: "choco install --no-progress ffmpeg tesseract --pre"
+      run: "choco install --no-progress ffmpeg"
     - name: "Setup Python"
       uses: "actions/setup-python@v2"
       with:

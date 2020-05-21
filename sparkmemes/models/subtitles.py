@@ -1,6 +1,6 @@
 class Subtitles:
     def __init__(self, phrases, interval, offset=0):
-        self.phrases = [tofu(x) for x in phrases]
+        self.phrases = [self.tofu(x) for x in phrases]
         self.interval = interval
         self.offset = offset
 

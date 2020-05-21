@@ -66,11 +66,15 @@ class Meme:
             if isinstance(self.data, BytesIO):
                 self.data = BytesIO()
 
-            Image.alpha_composite(
+            img = Image.alpha_composite(
                 # Replace transparency with Reddit's dark theme background
                 Image.new("RGBA", img.size, (26, 26, 27)),
                 img,
-            ).convert("RGB").save(self.data, format="PNG")
+            ).convert("RGB")
+
+            # TODO accurate OCR
+
+            img.save(self.data, format="PNG")
         except UnidentifiedImageError as e:
             return False
 

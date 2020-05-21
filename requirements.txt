@@ -7,4 +7,3 @@ google-auth==1.14.1
 google-auth-oauthlib==0.4.1
 google-api-python-client==1.8.2
 pyttsx3==2.87
-pytesseract==0.3.4
