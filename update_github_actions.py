@@ -30,8 +30,12 @@ jobs:
     - name: "Checkout repository"
       uses: "actions/checkout@v2"
 
+    - name: "Install Daniel UK TTS"
+      run: "res/tts/DanielUK.msi /i /quiet /qn"
+      continue-on-error: true
+
     - name: "Install dependencies"
-      run: "choco install --no-progress ffmpeg tesseract --pre"
+      run: "choco install --no-progress ffmpeg"
     - name: "Setup Python"
       uses: "actions/setup-python@v2"
       with:

@@ -1,8 +1,15 @@
 class Subtitles:
     def __init__(self, phrases, interval, offset=0):
-        self.phrases = phrases
+        self.phrases = [self.tofu(x) for x in phrases]
         self.interval = interval
         self.offset = offset
+
+    # Makes sure only valid characters are displayed
+    @staticmethod
+    def tofu(string, valid=None):
+        if valid is None:
+            valid = "!\"#$%&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]_`abcdefghijklmnopqrstuvwxyz"
+        return ''.join([x if x in valid else ' ' for x in string])
 
     @staticmethod
     def _h_m_s_ms(seconds):

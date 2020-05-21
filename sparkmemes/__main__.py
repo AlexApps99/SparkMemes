@@ -20,10 +20,7 @@ def main(subreddits, name, description, tags):
     )
     memes = [m for m in Reddit(praw.Reddit()).download(subreddits, 75) if m.process()]
 
-    if supports_tts() and check_supports_tts():
-        vid = Video(intro, memes, outro, True)
-    else:
-        vid = Video(intro, memes, outro, False)
+    vid = Video(intro, memes, outro)
     vid.prerender()
     vid.render()
     refr, client, secret = (
