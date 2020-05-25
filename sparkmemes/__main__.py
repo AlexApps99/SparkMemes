@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from os import getenv
 
 
-def main(subreddits, name, description, tags):
+def render(subreddits, num=75, tts=True):
     intro = Transition(
         "res/intro/intro.png",
         "res/intro/intro.mp3",
@@ -18,11 +18,14 @@ def main(subreddits, name, description, tags):
         20,
         "The end of this video\n(More to come very soon)",
     )
-    memes = [m for m in Reddit(praw.Reddit()).download(subreddits, 75) if m.process()]
-
-    vid = Video(intro, memes, outro)
+    memes = [m for m in Reddit(praw.Reddit()).download(subreddits, num) if m.process()]
+    vid = Video(intro, memes, outro, *((None) if not tts else ()))
     vid.prerender()
     vid.render()
+
+
+def main(subreddits, name, description, tags):
+    render(subreddits)
     refr, client, secret = (
         getenv("YT_REFRESH_TOKEN"),
         getenv("YT_CLIENT_ID"),
