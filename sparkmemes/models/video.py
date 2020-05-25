@@ -88,7 +88,8 @@ class Video:
             audio = ffmpeg.input("res/loops/CoconutMall.mp3", stream_loop="-1")
             if self.tts is not None:
                 TTS.concat_waves(
-                    "tts.wav", [BytesIO(self.tts.say(m.tts_phrase())) for m in self.memes]
+                    "tts.wav",
+                    [BytesIO(self.tts.say(m.tts_phrase())) for m in self.memes],
                 )
                 audio = ffmpeg.filter(
                     [audio, ffmpeg.input("tts.wav")],

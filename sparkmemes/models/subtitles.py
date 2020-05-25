@@ -9,7 +9,7 @@ class Subtitles:
     def tofu(string, valid=None):
         if valid is None:
             valid = "!\"#$%&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]_`abcdefghijklmnopqrstuvwxyz"
-        return ''.join([x if x in valid else ' ' for x in string])
+        return "".join([x if x in valid else " " for x in string]).strip()
 
     @staticmethod
     def _h_m_s_ms(seconds):

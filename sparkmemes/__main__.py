@@ -20,7 +20,7 @@ def main(subreddits, name, description, tags):
     )
     memes = [m for m in Reddit(praw.Reddit()).download(subreddits, 75) if m.process()]
 
-    vid = Video(intro, memes, outro, None)
+    vid = Video(intro, memes, outro)
     vid.prerender()
     vid.render()
     refr, client, secret = (
