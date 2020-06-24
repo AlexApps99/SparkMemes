@@ -19,7 +19,7 @@ jobs:
       continue-on-error: true
 
     - name: "Install dependencies"
-      run: "choco install --no-progress ffmpeg"
+      run: "choco install --no-progress ffmpeg --version 4.2.3"
     - name: "Setup Python"
       uses: "actions/setup-python@v2"
       with:
