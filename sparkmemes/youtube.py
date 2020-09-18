@@ -52,13 +52,11 @@ class YouTube:
                         part=",".join(body.keys()),
                         body=body,
                         media_body=MediaFileUpload(video, chunksize=-1, resumable=True),
-                        autoLevels=False,
-                        stabilize=False,
                     )
                     .execute(num_retries=5)
                 )
             except HttpError as e:
-                print("An HTTP error " + e.resp.status + " occurred:\n" + e.content)
+                print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
             else:
                 print(
                     "The video ["
@@ -79,7 +77,7 @@ class YouTubeVideo:
                 num_retries=5
             )
         except HttpError as e:
-            print("An HTTP error " + e.resp.status + " occurred:\n" + e.content)
+            print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
         else:
             print("Video liked successfully")
 
@@ -93,7 +91,7 @@ class YouTubeVideo:
                 ),
             ).execute(num_retries=5)
         except HttpError as e:
-            print("An HTTP error " + e.resp.status + " occurred:\n" + e.content)
+            print(f"An HTTP error {e.resp.status} occurred:\n{e.content}")
         else:
             print("The custom thumbnail was successfully set.")
 
